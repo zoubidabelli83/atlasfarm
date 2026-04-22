@@ -77,6 +77,16 @@ function StatCard({ label, value, unit, trend, color }: StatCardProps) {
   );
 }
 
+// ✅ Helper function for safe tooltip formatting
+const safeNumberFormatter = (
+  value: number | undefined, 
+  unit: string, 
+  decimals = 2
+): [string, string] => {
+  if (value == null) return ["N/A", unit];
+  return [Number(value).toFixed(decimals), unit];
+};
+
 export default function AnalyticsPage() {
   const { t } = useI18n();
   const { sensors } = useApp();
@@ -213,7 +223,11 @@ export default function AnalyticsPage() {
             <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
             <XAxis dataKey="label" tick={{ fontSize: 10 }} interval="preserveStartEnd" />
             <YAxis domain={[5, 9]} tick={{ fontSize: 10 }} />
-            <Tooltip contentStyle={{ fontSize: 12, borderRadius: 8 }} formatter={(v: number) => [v.toFixed(2), "pH"]} />
+            {/* ✅ Fixed: handle undefined values */}
+            <Tooltip 
+              contentStyle={{ fontSize: 12, borderRadius: 8 }} 
+              formatter={(v) => safeNumberFormatter(v, "pH", 2)} 
+            />
             <Area type="monotone" dataKey="ph" stroke="#9b59b6" fill="url(#phGrad)" strokeWidth={2} dot={false} name="pH" />
           </AreaChart>
         </ResponsiveContainer>
@@ -232,7 +246,14 @@ export default function AnalyticsPage() {
             <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
             <XAxis dataKey="label" tick={{ fontSize: 9 }} interval={2} />
             <YAxis tick={{ fontSize: 10 }} tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} />
-            <Tooltip contentStyle={{ fontSize: 12, borderRadius: 8 }} formatter={(v: number) => [`${(Number(v) / 1000).toFixed(1)}k lux`, "Light"]} />
+            {/* ✅ Fixed: handle undefined values with custom lux formatting */}
+            <Tooltip 
+              contentStyle={{ fontSize: 12, borderRadius: 8 }} 
+              formatter={(v: number | undefined) => [
+                v != null ? `${(Number(v) / 1000).toFixed(1)}k lux` : "-", 
+                "Light"
+              ]} 
+            />
             <Bar dataKey="light" fill="#f39c12" radius={[3, 3, 0, 0]} name="Light (lux)" />
           </BarChart>
         </ResponsiveContainer>
