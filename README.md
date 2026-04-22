@@ -41,11 +41,39 @@ To learn more about Next.js, take a look at the following resources:
 - [Next.js Documentation](https://nextjs.org/docs)
 - [Learn Next.js](https://nextjs.org/learn)
 
-## Deploy
+## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new).
+This app is ready to deploy on [Vercel](https://vercel.com/new).
 
-Check out the [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+### 1) Push code to GitHub/GitLab/Bitbucket
+Push this repository to your Git provider.
+
+### 2) Import project in Vercel
+- Go to Vercel Dashboard
+- Click **Add New... → Project**
+- Import this repository
+- Framework preset should be detected as **Next.js**
+
+### 3) Configure Environment Variables in Vercel
+In **Project Settings → Environment Variables**, add:
+
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY`
+
+You can copy keys from `.env.example`.
+
+### 4) Build settings
+Use default Next.js settings:
+- Build Command: `npm run build`
+- Output: `.next` (auto-detected)
+
+### 5) Deploy
+Click **Deploy**. Vercel will build and publish automatically.
+
+### Notes
+- This project uses Supabase SSR and middleware/session refresh logic compatible with Vercel.
+- If using Next.js 16+, Vercel may show a warning that `middleware.ts` convention is deprecated in favor of `proxy`. This does not block deployment, but you can migrate later if desired.
 
 ---
 

@@ -1,15 +1,6 @@
-- [x] Investigate why CSS/theme is not fully applied
-- [x] Add missing custom classes used by components into `app/globals.css`
-- [x] Validate build (`npm run build`) — CSS compiles; build fails on unrelated TypeScript error in `components/pages/AnalyticsPage.tsx`
-- [x] Diagnose hydration mismatch from runtime testing
-- [x] Fix hydration mismatch in `components/pages/DashboardPage.tsx` by moving live date/time to client effect state
-- [ ] Re-test affected UI areas (sidebar theme, hover/active, transitions, scrollbars) after hydration fix
-- [x] Add dedicated service-role Supabase admin client for privileged auth admin operations
-- [x] Patch `app/actions/users.ts` to use admin client for create/update/delete/reset paths while preserving `requireAdmin` guard
-- [x] Remove temporary `requireAdmin` debug logs
-- [ ] Re-test Admin Add User/Edit/Delete/Reset flows
-- [x] Plan Tasks page Supabase migration
-- [x] Create `app/actions/tasks.ts` with CRUD server actions
-- [x] Refactor `components/pages/TasksPage.tsx` to use Supabase actions
-- [ ] Re-test Tasks page CRUD/filters/status columns with real DB
-- [ ] Mark all tasks complete
+- [x] Review Supabase integration files for Vercel compatibility
+- [x] Run production build to identify blockers
+- [x] Fix build/deployment issues in code/config
+- [ ] Add `.env.example` with required Vercel environment variables
+- [ ] Update README with Vercel deployment steps
+- [ ] Re-run production build to verify successful deployment readiness

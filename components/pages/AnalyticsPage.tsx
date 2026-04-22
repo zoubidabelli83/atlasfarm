@@ -77,13 +77,14 @@ function StatCard({ label, value, unit, trend, color }: StatCardProps) {
   );
 }
 
-// ✅ Updated helper function: handles number | string | null | undefined from Recharts
+// ✅ Updated helper function: handles Recharts value types including tuple arrays
 const safeNumberFormatter = (
-  value: number | string | null | undefined, 
-  unit: string, 
+  value: number | string | readonly (number | string)[] | null | undefined,
+  unit: string,
   decimals = 2
 ): [string, string] => {
-  const numValue = typeof value === 'number' ? value : Number(value);
+  const rawValue = Array.isArray(value) ? value[0] : value;
+  const numValue = typeof rawValue === "number" ? rawValue : Number(rawValue);
   if (isNaN(numValue)) return ["N/A", unit];
   return [numValue.toFixed(decimals), unit];
 };
@@ -250,8 +251,9 @@ export default function AnalyticsPage() {
             {/* ✅ Fixed: inline formatter handles undefined/string values for lux */}
             <Tooltip 
               contentStyle={{ fontSize: 12, borderRadius: 8 }} 
-              formatter={(v: number | string | null | undefined) => {
-                const numValue = typeof v === 'number' ? v : Number(v);
+              formatter={(v) => {
+                const rawValue = Array.isArray(v) ? v[0] : v;
+                const numValue = typeof rawValue === "number" ? rawValue : Number(rawValue);
                 return [isNaN(numValue) ? "-" : `${(numValue / 1000).toFixed(1)}k lux`, "Light"];
               }} 
             />
