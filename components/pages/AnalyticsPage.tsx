@@ -77,14 +77,15 @@ function StatCard({ label, value, unit, trend, color }: StatCardProps) {
   );
 }
 
-// ✅ Helper function for safe tooltip formatting
+// ✅ Updated helper function: handles number | string | null | undefined from Recharts
 const safeNumberFormatter = (
-  value: number | undefined, 
+  value: number | string | null | undefined, 
   unit: string, 
   decimals = 2
 ): [string, string] => {
-  if (value == null) return ["N/A", unit];
-  return [Number(value).toFixed(decimals), unit];
+  const numValue = typeof value === 'number' ? value : Number(value);
+  if (isNaN(numValue)) return ["N/A", unit];
+  return [numValue.toFixed(decimals), unit];
 };
 
 export default function AnalyticsPage() {
@@ -223,7 +224,7 @@ export default function AnalyticsPage() {
             <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
             <XAxis dataKey="label" tick={{ fontSize: 10 }} interval="preserveStartEnd" />
             <YAxis domain={[5, 9]} tick={{ fontSize: 10 }} />
-            {/* ✅ Fixed: handle undefined values */}
+            {/* ✅ Fixed: safeNumberFormatter handles all Recharts value types */}
             <Tooltip 
               contentStyle={{ fontSize: 12, borderRadius: 8 }} 
               formatter={(v) => safeNumberFormatter(v, "pH", 2)} 
@@ -246,13 +247,13 @@ export default function AnalyticsPage() {
             <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
             <XAxis dataKey="label" tick={{ fontSize: 9 }} interval={2} />
             <YAxis tick={{ fontSize: 10 }} tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} />
-            {/* ✅ Fixed: handle undefined values with custom lux formatting */}
+            {/* ✅ Fixed: inline formatter handles undefined/string values for lux */}
             <Tooltip 
               contentStyle={{ fontSize: 12, borderRadius: 8 }} 
-              formatter={(v: number | undefined) => [
-                v != null ? `${(Number(v) / 1000).toFixed(1)}k lux` : "-", 
-                "Light"
-              ]} 
+              formatter={(v: number | string | null | undefined) => {
+                const numValue = typeof v === 'number' ? v : Number(v);
+                return [isNaN(numValue) ? "-" : `${(numValue / 1000).toFixed(1)}k lux`, "Light"];
+              }} 
             />
             <Bar dataKey="light" fill="#f39c12" radius={[3, 3, 0, 0]} name="Light (lux)" />
           </BarChart>
